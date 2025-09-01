@@ -39,7 +39,7 @@ cd Aula04_TP_CC
 ### 2. Instale as dependências
 
 ``` bash
-npm install
+npm install express socket.io
 ```
 
 ### 3. Execute o servidor
