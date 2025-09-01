@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard em Tempo Real</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script defer src="client.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    h1 { color: #333; }
+    #dashboard {
+      margin-top: 20px;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    ul { list-style: none; padding: 0; }
+  </style>
+</head>
+<body>
+  <h1>📊 Painel em Tempo Real</h1>
+
+  <div>
+    <button onclick="joinRoom('Room1')">Entrar na Room1</button>
+    <button onclick="joinRoom('Room2')">Entrar na Room2</button>
+    <button onclick="joinRoom('Room3')">Entrar na Room3</button>
+  </div>
+
+  <div id="dashboard">
+    <p><strong>Usuários conectados:</strong> <span id="totalUsers">0</span></p>
+    <p><strong>Room mais popular:</strong> <span id="popularRoom">Nenhuma</span></p>
+
+    <h3>Ranking de Rooms:</h3>
+    <ul id="roomList"></ul>
+  </div>
+</body>
+</html>
