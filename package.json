@@ -1,6 +1,19 @@
 {
+  "name": "painel-socketio",
+  "version": "1.0.0",
+  "description": "Painel em tempo real com Socket.IO, mostrando usuários e rooms",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Marcondes05",
+  "license": "MIT",
   "dependencies": {
     "express": "^5.1.0",
     "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
