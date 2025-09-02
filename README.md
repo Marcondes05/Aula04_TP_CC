@@ -74,9 +74,8 @@ npx nodemon server.js
 
 ## 🌟 Extra
 
--   Mostrar ranking completo das rooms ✅\
--   Fácil de estender para usar **Chart.js** e gerar gráficos em tempo
-    real 📊\
+-   Mostrar ranking completo das rooms ✅
+-   Gera gráficos em tempo real 📊
 -   Pode ser adaptado para sistemas de **chat em tempo real**,
     **monitoramento de usuários** ou **jogos multiplayer**.
 
