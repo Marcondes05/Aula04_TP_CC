@@ -12,13 +12,23 @@ let users = {}; // socket.id -> room
 
 io.on("connection", (socket) => {
   console.log(`🔌 Usuário conectado: ${socket.id}`);
-  users[socket.id] = null; // usuário sem sala inicialmente
+  users[socket.id] = null;
 
   // Cliente pede para entrar em uma room
   socket.on("joinRoom", (roomName) => {
+    const clientsInRoom = io.sockets.adapter.rooms.get(roomName);
+    const numClients = clientsInRoom ? clientsInRoom.size : 0;
+
+    if (numClients >= 5) {
+      // Avisar apenas o cliente que tentou entrar
+      socket.emit("roomFull", roomName);
+      return;
+    }
+
     if (users[socket.id]) {
       socket.leave(users[socket.id]);
     }
+
     socket.join(roomName);
     users[socket.id] = roomName;
     console.log(`👥 ${socket.id} entrou na sala ${roomName}`);
@@ -34,9 +44,8 @@ io.on("connection", (socket) => {
 // Função para calcular estatísticas
 function getStats() {
   const totalUsers = Object.keys(users).length;
-
-  // Contar usuários por room
   let roomCounts = {};
+
   for (let id in users) {
     const room = users[id];
     if (room) {
@@ -44,7 +53,6 @@ function getStats() {
     }
   }
 
-  // Ordenar por popularidade
   let sortedRooms = Object.entries(roomCounts).sort((a, b) => b[1] - a[1]);
 
   return {

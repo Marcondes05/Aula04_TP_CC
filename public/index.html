@@ -4,27 +4,128 @@
   <meta charset="UTF-8" />
   <title>Dashboard em Tempo Real</title>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script defer src="client.js"></script>
-  
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
       text-align: center;
-      margin: 20px;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
     }
-    h1 { color: #333; }
-    #dashboard {
-      margin-top: 20px;
+    header {
+      background: #ff6b6b;
       padding: 20px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      display: inline-block;
+      font-size: 2rem;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
-    ul { list-style: none; padding: 0; }
+    #dashboard {
+      margin: 30px auto;
+      padding: 25px;
+      border-radius: 16px;
+      background: rgba(20, 20, 30, 0.9);
+      width: 90%;
+      max-width: 1000px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #1b1d2a;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .card.wide {
+      grid-column: span 2;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    p {
+      font-size: 1.2rem;
+    }
+    .alert {
+      background: #ff4d4d;
+      color: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .alert.active {
+      display: block;
+      animation: blink 0.8s infinite alternate;
+    }
+
+    @keyframes blink {
+      from { background: #ff4d4d; }
+      to { background: #b30000; }
+    }
+
+    @keyframes blink {
+      from { background: #ff4d4d; }
+      to { background: #b30000; }
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+    li {
+      background: #2b2d42;
+      margin: 6px auto;
+      padding: 10px;
+      border-radius: 8px;
+      width: 80%;
+      font-weight: bold;
+      color: #ffd369;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    button {
+      margin: 8px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background: #06d6a0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #04b080;
+      transform: scale(1.05);
+    }
+    h3 {
+      margin-top: 25px;
+      color: #ffd369;
+    }
+    canvas {
+      margin-top: 20px;
+      max-width: 100%;
+      background: #1b1d2a;
+      border-radius: 12px;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>📊 Painel em Tempo Real</h1>
+  <header>📊 Painel em Tempo Real</header>
 
   <div>
     <button onclick="joinRoom('Room1')">Entrar na Room1</button>
@@ -33,11 +134,30 @@
   </div>
 
   <div id="dashboard">
-    <p><strong>Usuários conectados:</strong> <span id="totalUsers">0</span></p>
-    <p><strong>Room mais popular:</strong> <span id="popularRoom">Nenhuma</span></p>
+    <div class="stats">
+      <p><strong>Usuários conectados:</strong> <span id="totalUsers">0</span></p>
+      <p><strong>Room mais popular:</strong> <span id="popularRoom">Nenhuma</span></p>
+      <div id="alert" class="alert">⚠️ Atenção: uma room está cheia!</div>
+      <div id="roomFullAlert" class="alert">⚠️ Room cheia!</div>
+    </div>
 
-    <h3>Ranking de Rooms:</h3>
-    <ul id="roomList"></ul>
+    <div class="grid">
+      <div class="card">
+        <h3>Ranking de Rooms</h3>
+        <ul id="roomList"></ul>
+      </div>
+
+      <div class="card">
+        <h3>📊 Gráfico de Rooms</h3>
+        <canvas id="roomChart"></canvas>
+      </div>
+
+      <div class="card wide">
+        <h3>📈 Evolução de Usuários</h3>
+        <canvas id="usersChart"></canvas>
+      </div>
+    </div>
   </div>
+
 </body>
 </html>
